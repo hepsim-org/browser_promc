@@ -14,4 +14,18 @@ java -cp browser_promc.jar hepsimproio.Info [file]
 java -cp browser_promc.jar hepsimproio.Info [file] 10
 ```
 
+Here are more examples:
+
+```
+# list files
+java -cp browser_promc.jar  hepsim.Ls tev100_ttbar_mg5%rfast001
+# (or)
+java -cp browser_promc.jar  hepsim.Ls http://mc.hep.anl.gov/asc/hepsim/events/pp/100tev/ttbar_mg5
+
+# get files
+java -cp browser_promc.jar  hepsim.Get tev100_ttbar_mg5%rfast001
+java -cp browser_promc.jar  hepsim.GetMirrors tev100_ttbar_mg5%rfast001
+java -cp browser_promc.jar  hepsim.Get http://mc.hep.anl.gov/asc/hepsim/events/pp/100tev/ttbar_mg5
+```
+
 S.Chekanov (ANL)
