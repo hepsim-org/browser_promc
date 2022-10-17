@@ -21,7 +21,7 @@ public class Get {
 private static String toDir="";
 
 	/**
-	* Start downloading
+	* Start downloading. 
         * @param inputURL input HepSim URL
         * @param dest destination
 	**/
@@ -30,14 +30,19 @@ private static String toDir="";
 		URL website = null;
 		try {
 			website = new URL(inputURL);
-			Files.copy(website.openStream(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        URLConnection urlConn = website.openConnection();
+                        urlConn.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
+                        urlConn.setUseCaches(false);
+                        // Requesting input data from server
+                        InputStream inputStream = urlConn.getInputStream();
+                        Files.copy(inputStream, dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        inputStream.close();
+                        //urlConn.disconnect();
 		} catch (MalformedURLException e) {
 			HepSim.ErrorMessage("No such location: "+inputURL);
 		} catch (IOException e) {
-			HepSim.ErrorMessage("Error for "+dest);
+			HepSim.ErrorMessage("Download Error for "+dest);
 		}
-
-
 
 	}
 
