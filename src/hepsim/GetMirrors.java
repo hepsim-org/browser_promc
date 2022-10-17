@@ -33,13 +33,17 @@ public class GetMirrors {
 		URL website = null;
 		try {
 			website = new URL(inputURL);
-			Files.copy(website.openStream(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        URLConnection urlConn = website.openConnection();
+                        urlConn.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
+                        urlConn.setUseCaches(false);
+                        // Requesting input data from server
+                        InputStream inputStream = urlConn.getInputStream();
+			Files.copy(inputStream, dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (MalformedURLException e) {
 			HepSim.ErrorMessage("No such location: "+inputURL);
 		} catch (IOException e) {
 			HepSim.ErrorMessage("Error for "+dest);
 		}
-
 
 
 	}
@@ -163,12 +167,12 @@ public class GetMirrors {
 			if (surl_array.length>1){
 				int num1;
 
-				System.out.println(HepSim.ANSI_BLUE+"Available data servers:"+HepSim.ANSI_RESET);
+				System.out.println(HepSim.ANSI_PURPLE+"Available data servers:"+HepSim.ANSI_RESET);
 				for (int j=0; j<surl_array.length; j++){
-                                        System.err.print(HepSim.ANSI_BLUE+"["+Integer.toString(j)+"]"+HepSim.ANSI_RESET);
+                                        System.err.print(HepSim.ANSI_PURPLE+"["+Integer.toString(j)+"]"+HepSim.ANSI_RESET);
 					System.out.println(" "+surl_array[j]);
 				}
-				System.out.println("The default server is set to "+HepSim.ANSI_BLUE+"[0]"+HepSim.ANSI_RESET);
+				System.out.println("The default server is set to "+HepSim.ANSI_PURPLE+"[0]"+HepSim.ANSI_RESET);
 				System.out.print("Press [ENTER], or enter alternative server (int value): ");
 
 				while (true) {
