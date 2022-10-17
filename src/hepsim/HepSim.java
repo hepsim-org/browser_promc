@@ -24,6 +24,7 @@ import java.net.MalformedURLException;
 import java.util.*;
 import java.util.zip.Inflater;
 import java.net.*;
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * 
@@ -56,7 +57,7 @@ public static final String ANSI_WHITE = "\u001B[37m";
 	private long version = -1;
 
         // main HepSim URL
-        public static String hepsim_www="http://atlaswww.hep.anl.gov/hepsim/";
+        public static String hepsim_www="https://atlaswww.hep.anl.gov/hepsim/";
 
         public static ArrayList<String> mirrors = new ArrayList<String>();
 
@@ -74,7 +75,8 @@ public static final String ANSI_WHITE = "\u001B[37m";
  */
 public static boolean ping(String surl, int timeout) {
     // Otherwise an exception may be thrown on invalid SSL certificates:
-    surl = surl.replaceFirst("https", "http");
+    //surl = surl.replaceFirst("https", "http");
+    //System.out.println("Open ="+surl);
 
 /*
     try {
@@ -91,12 +93,14 @@ public static boolean ping(String surl, int timeout) {
 
      try{
                 URL url = new URL(surl);
-                HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-                //HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+                //URLConnection connection = url.openConnection();
+                HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+                //HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+                connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");     
                 connection.setRequestMethod("GET");
                 connection.connect();
                 int code = connection.getResponseCode();  
-                // System.out.println("code: "+code);
+                //System.out.println("returned code: "+code);
                 if (code>=200 && code<410) return true; 
             } catch (Exception e) {
                 // e.printStackTrace();
@@ -186,9 +190,10 @@ public static boolean ping(String surl, int timeout) {
 				ErrorMessage("Error in accessing the URL="+url.toString());
 			}
 
+                        //System.out.println("Reading from URL: " + file);
 			try {
-				// System.out.println("Reading from URL: " + file);
 				URLConnection urlConn = url.openConnection();
+                                urlConn.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
 				urlConn.setUseCaches(false);
 				zin = new ZipInputStream(urlConn.getInputStream());
 				files=fetchDescriptionURL("files");
@@ -200,7 +205,7 @@ public static boolean ping(String surl, int timeout) {
 			} catch (IOException e) {
                                 ErrorMessage("Error: The location of data sample was not found! Please check URL!"); 
                                 System.exit(1);
-				// System.err.println(e.toString());
+				System.err.println(e.toString());
 			}
 
 
@@ -457,7 +462,7 @@ public static boolean ping(String surl, int timeout) {
                 //System.out.println("Call urlRedirector="+surl);
 
                 // if this is HTTP, just get the main
-                 if (surl.indexOf("http:")>-1 && surl.indexOf("info.php?")<0) {
+                 if (surl.indexOf("http")>-1 && surl.indexOf("info.php?")<0) {
                     //System.out.println("Direct call to "+surl);
                     return new String[]{surl};
                  }
@@ -479,8 +484,11 @@ public static boolean ping(String surl, int timeout) {
                 if (smart>0) {
                  try {
                     URL url = new URL(surl);
+                    URLConnection openConnection = url.openConnection();
+                    openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
+
                     // System.out.println(surl);
-                    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+                    BufferedReader in = new BufferedReader(new InputStreamReader( openConnection.getInputStream() ));
                     String line;
                     String NEWURL="";
                     while ((line = in.readLine()) != null) {
@@ -509,7 +517,7 @@ public static boolean ping(String surl, int timeout) {
                 }
                 catch (IOException e) {
                     ErrorMessage("Connection problem with the HepSim repository.");   
-                    System.out.println("I/O Error: " + e.getMessage());
+                    System.out.println("HepSim IOException Error: " + e.getMessage());
                     return null; 
                 }
                 }
