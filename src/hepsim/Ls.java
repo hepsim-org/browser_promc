@@ -62,9 +62,9 @@ public class Ls {
                 if (surl_array != null) {
                  surl=surl_array[0];
                  if (surl_array.length>1){
-                 System.out.println(HepSim.ANSI_BLUE+"Available mirrors:"+HepSim.ANSI_RESET);
+                 System.out.println(HepSim.ANSI_PURPLE+"Available mirrors:"+HepSim.ANSI_RESET);
                                 for (int j=0; j<surl_array.length; j++){
-                                        System.err.print(HepSim.ANSI_BLUE+"["+Integer.toString(j)+"]"+HepSim.ANSI_RESET);
+                                        System.err.print(HepSim.ANSI_PURPLE+"["+Integer.toString(j)+"]"+HepSim.ANSI_RESET);
                                         System.out.println("  "+surl_array[j]);
                                 }
                   }
