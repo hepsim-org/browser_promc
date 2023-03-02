@@ -46,10 +46,11 @@ public class Find {
                 try {
                                 // System.out.println("Reading from URL: " + file);
                                 String ses=HepSim.hepsim_www+"find.php?a="+search; 
-                                URL url = new URL(ses);
+                                URL url=new URL(ses);
                                 URLConnection urlConn = url.openConnection();
+                                urlConn.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
                                 urlConn.setUseCaches(false);
-
+	
                                 BufferedReader in = new BufferedReader(
                                 new InputStreamReader(
                                     urlConn.getInputStream()));
